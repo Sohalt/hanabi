@@ -1,0 +1,104 @@
+.card {
+    text-align:center;
+    font-size:2em;
+    color:black;
+    border-style:solid;
+    border-radius:10px;
+    border-color:black;
+    padding:30px;
+    margin:10px;
+    float:left;
+}
+
+.card.hint-marker {
+    transform:scale(1.2);
+}
+
+/* .card.hint-marker::before{ */
+/*     content:"."; */
+/*     display:block; */
+/*     /\* posititon:relative; *\/ */
+/*     width:30px; */
+/*     height:30px; */
+/*     border-radius:50%; */
+/*     bottom:40px; */
+/*     background:black; */
+/* } */
+
+.player {
+    clear:both
+}
+.red {
+    background:red;
+}
+.blue {
+    background:blue;
+}
+.yellow {
+    background:yellow;
+}
+.green {
+    background:green;
+}
+.white {
+    background:white;
+}
+
+#strikes {
+    clear:both;
+}
+
+.strike {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    float:left;
+    margin:5px;
+}
+
+.strike {
+    background:darkblue;
+    text-align:center;
+}
+
+.strike.struck::before {
+    content:"⚡";
+    font-size:30px;
+    color:yellow;
+}
+
+#hints {
+    clear:both;
+}
+
+.hint {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    float:left;
+    margin:5px;
+}
+
+.hint.used {
+    background:black;
+}
+
+.hint.free {
+    background:beige;
+}
+
+#discard-pile {
+    display:inline-block;
+    border-radius:5px;
+    padding:5px;
+    background:grey;
+}
+
+#discard-pile .card {
+    margin:0px;
+    margin-left:-40px;
+}
+
+#discard-pile .card.discard {
+    margin-left:0px;
+}
