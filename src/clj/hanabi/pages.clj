@@ -27,6 +27,6 @@
 (defn game [player]
   (html5
    (include-css "/css/game.css")
-   [:div#me {:style {:display "none"}} player]
+   [:div#me {:style "display:none"} player]
    [:div#app]
    (include-js "/js/game.js")))
