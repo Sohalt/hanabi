@@ -3,8 +3,8 @@
 An implementation of the cooperative card game [Hanabi](https://en.wikipedia.org/wiki/Hanabi_%28card_game%29), winner of Spiel des Jahres 2013, in Clojure and ClojureScript for playing in the Browser.
 If you like the game please consider buying the physical version to support the original author. Additionally it is a kind of game that is quite a bit more fun to play face to face at a table.
 If you want to support me as well for the development of this version you can buy the game through the Amazon Affiliate Program:
-[Normal Edition](http://www.amazon.de/gp/product/B009CQLZR0/ref=as_li_tl?ie=UTF8&camp=1638&creative=6742&creativeASIN=B009CQLZR0&linkCode=as2&tag=sohaltnet-21)
-[Deluxe Edition](http://www.amazon.de/gp/product/B00ERK4GV8/ref=as_li_tl?ie=UTF8&camp=1638&creative=6742&creativeASIN=B00ERK4GV8&linkCode=as2&tag=sohaltnet-21)
+[Normal Edition](http://www.amazon.de/gp/product/B009CQLZR0/ref=as_li_tl?ie=UTF8&camp=1638&creative=19454&creativeASIN=B009CQLZR0&linkCode=as2&tag=wwwsohaltne03-21)
+[Deluxe Edition](http://www.amazon.de/gp/product/B00ERK4GV8/ref=as_li_tl?ie=UTF8&camp=1638&creative=6742&creativeASIN=B00ERK4GV8&linkCode=as2&tag=wwwsohaltne03-21)
 
 ## Prerequisites
 
