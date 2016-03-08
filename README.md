@@ -32,6 +32,8 @@ Some things which I plan to implement:
 - animation (make player moves and effects more visually apparent, e.g. animate which card got played and where it ended up)
 - reordering of cards in a hand
 - support for advanced game modes including the multicolored cards
+- display lost and win states
+- delete finished games
 - scoring and leaderboard
 
 ## License
