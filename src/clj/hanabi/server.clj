@@ -44,5 +44,7 @@
 
 (defn -main [& args]
   (println "starting...")
-  (let [handler (if (some #{"-reload"} args) (reload/wrap-reload #'app) app)]
-    (http-kit/run-server handler {:port 3000}))) ;TODO specify port in config or on commandline
+  (let [handler (if (some #{"-reload"} args) (reload/wrap-reload #'app) app)
+        stop-server (http-kit/run-server handler {:port 3000})] ;TODO specify port in config or on commandline
+    (println "running at http://localhost:3000/")
+    stop-server))
