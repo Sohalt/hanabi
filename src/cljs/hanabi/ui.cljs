@@ -1,9 +1,6 @@
 (ns hanabi.ui
   (:require [hanabi.ui-events :refer [drag-start drag-over start-listener discard-drop play-drop give-hint]]))
 
-(defn current-player [player]
-  [:div [:span "current player: " player]])
-
 (defn- card
   ([c] (card c false))
   ([{:keys [id color number]} draggable]
@@ -12,11 +9,12 @@
          draggable-attrs (when draggable {:draggable true :onDragStart #(drag-start %)})]
      [:div.card (merge base-attrs id-attrs draggable-attrs) (or number "?")])))
 
-(defn- hand
+(defn- hand ;store marked cards (for hints) here?
   ([p] (hand p false))
-  ([[name cards] mine]
+  ([p a] (hand p a false))
+  ([[name cards] active mine]
    [:div.player {:key name :id name}
-    [:h2 name]
+    [:h2 (if active {:id "active"} {}) name]
     [:div.cards (map #(card % mine) (vals cards))]]))
 
 (defn- discard-pile [cards]
@@ -38,23 +36,22 @@
   (let [left (- 3 struck)]
     [:div#strikes (repeat left [:div.strike.left]) (repeat struck [:div.strike.struck])]))
 
-(defn- display-hands [players hands me]
+(defn- display-hands [players hands current-player me]
   (let [others (filter (partial not= me) players)]
-    [:div#hands (map #(hand [% (hands %)]) others) (hand [me (hands me)] true)]))
+    [:div#hands (map #(hand [% (hands %)] (= current-player %)) others) (hand [me (hands me)] (= current-player me) true)]))
 
 (defn table [game me]
   "displays the game state on the table"
   (let [game @game
         players (:players game)
         hands (:hands game)
-        player (players (:current-player game))]
-    [:div#table
-     [current-player player] ;TODO display more elegantly (e.g. marker next to player name)
+        current-player (players (:current-player game))]
+    [:div#table (if-not (= me current-player) (let [prevent-event (fn [e] (.preventDefault e) (.stopPropagation e))] {:onMouseDownCapture prevent-event :onClickCapture prevent-event}) {}) ; prevent events when it's no the player's turn
      [discard-pile (:discard game)]
      [stacks (:table game)]
      [hints (:hints game)]
      [strikes (:lightning game)]
-     [display-hands players hands me]]))
+     [display-hands players hands current-player me]]))
 
 (defn- start []
   [:button#start-btn {:onClick #(start-listener %)} "Start"])
@@ -66,8 +63,9 @@
   (let [playercnt (count (:players @game))]
     [:div#lobby
      [players (:players @game)]
-     (when (<= 2 playercnt 5)
-       [start])]))
+     (if (<= 2 playercnt)
+       [start]
+       [:span "Waiting for players…"])]))
 
 (defn app [game me]
   (if (:running @game)

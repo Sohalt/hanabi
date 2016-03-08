@@ -28,6 +28,10 @@
 .player {
     clear:both
 }
+.player > #active::before {
+    content:"*";
+}
+
 .red {
     background:red;
 }
