@@ -16,12 +16,14 @@
                  [hiccup "1.0.5"]
                  [reagent "0.6.0-alpha"]]
   :aliases {"start" ["do" "cljsbuild" "once" "adv," "run"]}
+  :hooks [leiningen.cljsbuild]
+  :source-paths ["src/clj"]
+  :main hanabi.server
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                         [ring/ring-mock "0.3.0"]]
          :plugins [[lein-cljsbuild "1.1.2"]
                    [lein-ancient "0.6.8"]]
-         :source-paths ["src/clj"]
          :cljsbuild
          {:builds {:dev {:source-paths ["src/cljs"]
                          :compiler {:main "hanabi.client"
@@ -35,5 +37,5 @@
                                     :output-dir "resources/public/js/out-adv"
                                     :asset-path "/js/out-adv"
                                     :optimizations :advanced
-                                    :pretty-print false}}}}
-         :main hanabi.server}})
+                                    :pretty-print false}}}}}
+   :clean-targets ["resource/public/js" :target-path]})
