@@ -14,7 +14,6 @@
                  [reagent "0.6.0-alpha"]
                  [cprop "0.1.6"]]
   :aliases {"start" ["do" "cljsbuild" "once" "adv," "run"]}
-  :hooks [leiningen.cljsbuild]
   :source-paths ["src/clj"]
   :main hanabi.server
   :profiles
