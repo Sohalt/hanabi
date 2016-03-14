@@ -49,7 +49,7 @@
           hands (:hands game)]
       (is (:running game))
       (is (= 2 (count hands)))
-      (is (every? #(= 5 (count %)) (vals hands)))))
+      (is (every? #(= 5 (count %)) (map :cards (vals hands))))))
   (testing "start with 1 player"
     (is (thrown? AssertionError (start one-player))))
   (testing "start running game"
@@ -60,15 +60,15 @@
     (let [g (play running-game 4)]
       (is (= 1 (get-in g [:table :green])) "card got played")
       (is (= 0 (count (:discard g))) "card did not get discarded")
-      (is (not (contains? (get-in g [:hands "foo"]) 4)) "player does not have the card anymore")
-      (is (= 5 (count (get-in g [:hands "foo"]))) "player has drawn a new card")
+      (is (not (contains? (get-in g [:hands "foo" :cards]) 4)) "player does not have the card anymore")
+      (is (= 5 (count (get-in g [:hands "foo" :cards]))) "player has drawn a new card")
       (is (= 1 (:current-player g)) "next turn")))
   (testing "play non matching card"
     (let [g (play running-game 0)]
       (is (= 1 (:lightning g)) "lightning struck")
       (is (= 1 (count (:discard g))) "card got discarded")
-      (is (not (contains? (get-in g [:hands "foo"]) 0)) "player does not have the card anymore")
-      (is (= 5 (count (get-in g [:hands "foo"]))) "player has drawn a new card")
+      (is (not (contains? (get-in g [:hands "foo" :cards]) 0)) "player does not have the card anymore")
+      (is (= 5 (count (get-in g [:hands "foo" :cards]))) "player has drawn a new card")
       (is (= 1 (:current-player g)) "next turn")))
   (testing "play card that does not belong to the current player"
     (is (thrown? AssertionError (play running-game 5))))

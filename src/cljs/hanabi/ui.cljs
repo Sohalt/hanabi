@@ -15,7 +15,7 @@
   ([[name cards] active mine]
    [:div.player {:key name :id name}
     [:h2 (if active {:id "active"} {}) name]
-    [:div.cards (map #(card % mine) (vals cards))]]))
+    [:div.cards (map #(card % mine) cards)]]))
 
 (defn- discard-pile [cards]
   [:div#discard-pile
@@ -37,8 +37,11 @@
     [:div#strikes (repeat left [:div.strike.left]) (repeat struck [:div.strike.struck])]))
 
 (defn- display-hands [players hands current-player me]
-  (let [others (filter (partial not= me) players)]
-    [:div#hands (map #(hand [% (hands %)] (= current-player %)) others) (hand [me (hands me)] (= current-player me) true)]))
+  (let [others (filter (partial not= me) players)
+        ordered-cards (fn [{:keys [order cards]}] (map cards order))]
+    [:div#hands
+     (map (fn [player] (hand [player (ordered-cards (hands player))] (= current-player player))) others)
+     (hand [me (ordered-cards (hands me))] (= current-player me) true)]))
 
 (defn table [game me]
   "displays the game state on the table"

@@ -35,15 +35,33 @@
                  :current-player (rand-int num-players)
                  :cards-drawn cards-drawn
                  :hands (zipmap players
-                                (map zipmap
-                                     (partition cards-per-player (range cards-drawn))
+                                (map (fn [hand]
+                                       (let [ids (mapv :id hand)]
+                                         {:order ids
+                                          :cards (zipmap ids hand)}))
                                      (partition cards-per-player (:deck game))))})))
 
 (defn current-player [game]
   ((:players game) (:current-player game)))
 
-(defn next-turn [game]
+(defn- next-turn [game]
   (update game :current-player #(mod (inc %) (count (:players game)))))
+
+(defn- add-card [hand {:keys [id] :as card}]
+  (-> hand
+      (update :order conj id)
+      (update :cards assoc id card)))
+
+(defn- remove-card [hand card-id]
+  (-> hand
+      (update :order (fn [order] (filterv #(not= % card-id) order)))
+      (update :cards dissoc card-id)))
+
+(defn reorder-hand [game player new-order]
+  (let [old-order (get-in game [:hands player :order])]
+    (assert (= (count new-order) (count old-order)) "reordering does not change card count")
+    (assert (= (set old-order) (set new-order)) "reordering does not change cards"))
+  (assoc-in game [:hands player :order] new-order))
 
 (defn- draw [game]
   (assert (< (:cards-drawn game) (count DECK)))
@@ -51,11 +69,11 @@
         card ((:deck game) (:cards-drawn game))]
     (-> game
         (update :cards-drawn inc)
-        (assoc-in [:hands player (:id card)] card)
+        (update-in [:hands player] add-card card)
         (next-turn))))
 
 (defn- has-card? [game player card-id]
-  (contains? (get-in game [:hands player]) card-id))
+  (contains? (get-in game [:hands player :cards]) card-id))
 
 (defn- inc-hints [hints]
   (min HINTS (inc hints)))
@@ -74,7 +92,7 @@
          (-> game
              (update :lightning inc) ; no -> lightning strikes
              (update :discard conj card)))
-       (update-in [:hands player] #(dissoc % card-id))
+       (update-in [:hands player] remove-card card-id)
        (draw)))))
 
 (defn discard [game card-id]
@@ -85,7 +103,7 @@
     (-> game
         (update :discard conj ((:deck game) card-id))
         (update :hints inc-hints)
-        (update-in [:hands player] #(dissoc % card-id))
+        (update-in [:hands player] remove-card card-id)
         (draw))))
 
 (defn hint [game]
@@ -99,4 +117,4 @@
 (defn hint->ids [game player hint]
    "takes a hint in the form of a color as a keyword e.g. :red or a number e.g 5 and returns the card ids of all cards in the player's hand matching the hint"
    (let [type (if (keyword? hint) :color :number)]
-     (set (map :id (filter #(= (type %) hint) (vals (get-in game [:hands player])))))))
+     (set (map :id (filter #(= (type %) hint) (vals (get-in game [:hands player :cards])))))))
