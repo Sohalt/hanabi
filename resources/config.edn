@@ -1,0 +1,9 @@
+{
+;; should the server reload routes when the underlying files change? (useful for debugging/development). Do not use in production unless you know exactly what you are doing.
+:wrap-reload false
+;; the options map passed to http-kit (the server used by hanabi)
+;; for a list of valid options look at http://www.http-kit.org/server.html
+:http-kit {
+           :port 0 ;the port to bind to (0 means use any available port)
+}
+}

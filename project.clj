@@ -5,16 +5,14 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.7.170"]
                  [org.clojure/core.async "0.2.374"]
-
                  [com.taoensso/sente "1.8.0"]
-
                  [http-kit "2.1.18"]
-
                  [ring "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
                  [compojure "1.4.0"]
                  [hiccup "1.0.5"]
-                 [reagent "0.6.0-alpha"]]
+                 [reagent "0.6.0-alpha"]
+                 [cprop "0.1.6"]]
   :aliases {"start" ["do" "cljsbuild" "once" "adv," "run"]}
   :hooks [leiningen.cljsbuild]
   :source-paths ["src/clj"]

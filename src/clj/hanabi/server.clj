@@ -12,7 +12,10 @@
             [taoensso.sente :as sente]
             [taoensso.sente.server-adapters.http-kit
              :refer
-             [sente-web-server-adapter]]))
+             [sente-web-server-adapter]]
+            [cprop.core]))
+
+(def conf (cprop.core/load-config))
 
 (defn wrap-dispatch-event!
   [sente game {:keys [id ?data uid] :as event}]
@@ -44,7 +47,8 @@
 
 (defn -main [& args]
   (println "starting...")
-  (let [handler (if (some #{"-reload"} args) (reload/wrap-reload #'app) app)
-        stop-server (http-kit/run-server handler {:port 3000})] ;TODO specify port in config or on commandline
-    (println "running at http://localhost:3000/")
+  (let [handler (if (conf :wrap-reload) (reload/wrap-reload #'app) app)
+        stop-server (http-kit/run-server handler (conf :http-kit))
+        local-port ((meta stop-server) :local-port)]
+    (println "running at" (str "http://localhost:" local-port))
     stop-server))

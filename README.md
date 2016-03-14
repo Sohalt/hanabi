@@ -17,6 +17,10 @@ You will need [Leiningen][] 2.0.0 or above installed.
 To compile the clojurescript and start a web server for the application, run:
 
     lein start
+
+## Configuration
+
+The project uses [cprop](https://github.com/tolitius/cprop) for configuration parsing. This means you have a number of options available for specifying configuration, for example editing the default configuration file under `resources/config.edn` or by setting environment variables. For a detailed look on how cprop handles configuration please see the [cprop documentation](https://github.com/tolitius/cprop#what-does-cprop-do).
     
 ## Feedback
 
