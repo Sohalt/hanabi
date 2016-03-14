@@ -1,12 +1,12 @@
 (ns hanabi.ui
-  (:require [hanabi.ui-events :refer [drag-start drag-over start-listener discard-drop play-drop give-hint]]))
+  (:require [hanabi.ui-events :refer [drag-start drag-over drag-leave start-listener discard-drop play-drop swap-drop give-hint]]))
 
 (defn- card
   ([c] (card c false))
-  ([{:keys [id color number]} draggable]
+  ([{:keys [id color number]} mine]
    (let [base-attrs {:class (name (or color :unknown))}
          id-attrs (when id {:key id :id id})
-         draggable-attrs (when draggable {:draggable true :onDragStart #(drag-start %)})]
+         draggable-attrs (when mine {:draggable true :onDragStart #(drag-start %) :onDragOver #(drag-over %) :onDragLeave #(drag-leave %) :onDrop #(swap-drop %)})]
      [:div.card (merge base-attrs id-attrs draggable-attrs) (or number "?")])))
 
 (defn- hand ;store marked cards (for hints) here?
@@ -19,13 +19,13 @@
 
 (defn- discard-pile [cards]
   [:div#discard-pile
-   {:onDrop #(discard-drop %) :onDragOver #(drag-over %)}
+   {:onDrop #(discard-drop %) :onDragOver #(drag-over %) :onDragLeave #(drag-leave %)}
    [:div.card.discard "X"]
    (map card cards)])
 
 (defn- stacks [stacks]
   [:div#stacks
-   {:onDrop #(play-drop %) :onDragOver #(drag-over %)}
+   {:onDrop #(play-drop %) :onDragOver #(drag-over %) :onDragLeave #(drag-leave %)}
    (map card (map (fn [[color number]] {:color color :number number}) stacks))])
 
 (defn- hints [free]

@@ -57,11 +57,17 @@
       (update :order (fn [order] (filterv #(not= % card-id) order)))
       (update :cards dissoc card-id)))
 
-(defn reorder-hand [game player new-order]
+#_(defn reorder-hand [game player new-order]
   (let [old-order (get-in game [:hands player :order])]
     (assert (= (count new-order) (count old-order)) "reordering does not change card count")
     (assert (= (set old-order) (set new-order)) "reordering does not change cards"))
   (assoc-in game [:hands player :order] new-order))
+
+(defn swap-cards [game player [card1 card2]]
+  (let [order (get-in game [:hands player :order])]
+    (assert (some #{card1} order) "player has card1")
+    (assert (some #{card2} order) "player has card2"))
+  (update-in game [:hands player :order] #(replace {card1 card2 card2 card1} %)))
 
 (defn- draw [game]
   (assert (< (:cards-drawn game) (count DECK)))

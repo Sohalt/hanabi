@@ -1,5 +1,5 @@
 (ns hanabi.server-event-handlers
-  (:require [hanabi.game :refer [join start play discard hint reorder-hand hint->ids current-player]]))
+  (:require [hanabi.game :refer [join start play discard hint swap-cards hint->ids current-player]]))
 
 (defmulti update-game-state!
   (fn [game event]
@@ -28,6 +28,11 @@
   (swap! game discard card-id))
 
 (defmethod update-game-state!
+  :hanabi/swap-cards
+  [game {cards :?data uid :uid}]
+  (swap! game swap-cards uid cards))
+
+#_(defmethod update-game-state!
   :hanabi/reorder-hand
   [game {order :?data uid :uid}]
   (swap! game reorder-hand uid order))

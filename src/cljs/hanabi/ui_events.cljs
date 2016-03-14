@@ -14,16 +14,25 @@
 
 (defn drag-over [ev]
   (.preventDefault ev)
-  (.log js/console "drag enter")
-  (let [t (.-target ev)]
-    (set! (.-scale (.-style t)) 1.1))
+  (.log js/console "drag over")
+  (let [t (.-currentTarget ev)]
+    (.log js/console t)
+    (set! (.-transform (.-style t)) "scale(1.1)"))
   false)
+
+(defn drag-leave [ev]
+  (.log js/console "drag leave")
+  (let [t (.-currentTarget ev)]
+    (.log js/console t)
+    (set! (.-transform (.-style t)) "")))
 
 (defn discard-drop [ev]
   "gets called when the player drops a card on the discard pile (i.e. discards it)"
   (.preventDefault ev)
   (.log js/console "discard drop")
-  (let [id (int (.getData (.-dataTransfer ev) "text"))]
+  (let [t (.-currentTarget ev)
+        id (int (.getData (.-dataTransfer ev) "text"))]
+    (set! (.-transform (.-style t)) "")
     (chsk-send! [:hanabi/discard id]))
   false)
 
@@ -31,8 +40,21 @@
   "gets called when the player drops a card on the table (i.e. plays it)"
   (.preventDefault ev)
   (.log js/console "play drop")
-  (let [id (int (.getData (.-dataTransfer ev) "text"))]
+  (let [t (.-currentTarget ev)
+        id (int (.getData (.-dataTransfer ev) "text"))]
+    (set! (.-transform (.-style t)) "")
     (chsk-send! [:hanabi/play id]))
+  false)
+
+(defn swap-drop [ev]
+  "gets called when the player drops a card on another card in their hand to swap card positions"
+  (.preventDefault ev)
+  (.log js/console "swap drop")
+  (let [t (.-currentTarget ev)
+        fromId (int (.getData (.-dataTransfer ev) "text"))
+        toId (int (.-id t))]
+    (set! (.-transform (.-style t)) "")
+    (chsk-send! [:hanabi/swap-cards [fromId toId]]))
   false)
 
 ;TODO proper hint UI
@@ -66,4 +88,4 @@
 ;; (defn- ids->hints [game player ids]
 ;;   "given a list of card ids returns possible hints to give matching those cards"
 ;;   (let [hand (get-in game [:hands player])]
-;;     (apply intersection (map #(set (select-keys [:color :numbebr] (hand %))) ids))))
+;;     (apply intersection (map #(set (select-keys [:color :number] (hand %))) ids))))
